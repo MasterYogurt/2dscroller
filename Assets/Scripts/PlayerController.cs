@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -39,52 +41,31 @@ public class PlayerController : MonoBehaviour
             grounded = false;
         }
 
-
-        // Add upwards force to the player to jump if they are on the ground
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jump();
-        }
-
-        
-        // Check if the movement keys are pressed and save the state
-
-        // Right
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
-        {
-            movingRight = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D))
-        {
-            movingRight = false;
-        }
-
-        // Left
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
-        {
-            movingLeft = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
-        {
-            movingLeft = false;
-        }
-
-        // Sprinting
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-           sprinting = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            sprinting = false;
-        }
-
         // Only apply new velocity if we are on the ground
         if (grounded) Move();
 
+    }
+
+    // Set the states depending on the button pressed
+    // Adjusted from when I didnt read to use the Input System :(
+
+    public void JumpInput(InputAction.CallbackContext context){
+        if(context.ReadValueAsButton() & grounded)
+        {
+            Jump();
+        }
+    }
+
+    public void Sprint(InputAction.CallbackContext context){
+        sprinting = context.ReadValueAsButton();
+    }
+
+    public void MoveRight(InputAction.CallbackContext context){
+        movingRight = context.ReadValueAsButton();
+    }
+
+    public void MoveLeft(InputAction.CallbackContext context){
+        movingLeft = context.ReadValueAsButton();
     }
 
     private void Jump()
